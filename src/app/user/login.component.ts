@@ -1,33 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { userState } from "./state/user.reducer";
+import { Component, OnInit } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
 
-import { AuthService } from './auth.service';
+import { AuthService } from "./auth.service";
+import { Store, select } from "@ngrx/store";
 
 @Component({
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"]
 })
 export class LoginComponent implements OnInit {
-  pageTitle = 'Log In';
+  pageTitle = "Log In";
   errorMessage: string;
 
   maskUserName: boolean;
 
-  constructor(private authService: AuthService,
-              private router: Router) {
-  }
+  constructor(
+    private store: Store<any>,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-
+    this.store.pipe(select("users")).subscribe(users => {
+      if (users) {
+        this.maskUserName = users.isUsernameMasked;
+      }
+    });
   }
 
   cancel(): void {
-    this.router.navigate(['welcome']);
+    this.router.navigate(["welcome"]);
   }
 
   checkChanged(value: boolean): void {
-    this.maskUserName = value;
+    this.store.dispatch({ type: "TOGGLE_USER_MASK", payload: value });
   }
 
   login(loginForm: NgForm): void {
@@ -39,10 +47,10 @@ export class LoginComponent implements OnInit {
       if (this.authService.redirectUrl) {
         this.router.navigateByUrl(this.authService.redirectUrl);
       } else {
-        this.router.navigate(['/products']);
+        this.router.navigate(["/products"]);
       }
     } else {
-      this.errorMessage = 'Please enter a user name and password.';
+      this.errorMessage = "Please enter a user name and password.";
     }
   }
 }

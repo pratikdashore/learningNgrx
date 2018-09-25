@@ -1,4 +1,12 @@
-export function productReducer(state, action) {
+import { Product } from "./../product";
+
+export interface ProductState {
+  showProductCode: boolean;
+  currentProduct: Product;
+  products: Product[];
+}
+
+export function productReducer(state: ProductState, action) {
   switch (action.type) {
     case "TOGGLE_PRODUCT_CODE":
       console.log("Toggle product code reducer");
