@@ -1,0 +1,2 @@
+# learningNgrx
+To learn ngRx
