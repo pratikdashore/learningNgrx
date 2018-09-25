@@ -1,4 +1,9 @@
+import * as fromRoot from "./../../state/app.state";
 import { Product } from "./../product";
+
+export interface State extends fromRoot.State {
+  products: ProductState;
+}
 
 export interface ProductState {
   showProductCode: boolean;
@@ -6,7 +11,13 @@ export interface ProductState {
   products: Product[];
 }
 
-export function productReducer(state: ProductState, action) {
+const initialState: ProductState = {
+  showProductCode: true,
+  currentProduct: null,
+  products: []
+};
+
+export function productReducer(state = initialState, action): ProductState {
   switch (action.type) {
     case "TOGGLE_PRODUCT_CODE":
       console.log("Toggle product code reducer");

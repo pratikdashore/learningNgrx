@@ -1,3 +1,4 @@
+import * as fromProduct from "./../state/product.reducer";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 
 import { Subscription } from "rxjs";
@@ -24,7 +25,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   sub: Subscription;
 
   constructor(
-    private store: Store<any>,
+    private store: Store<fromProduct.State>,
     private productService: ProductService
   ) {}
 
@@ -41,9 +42,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       );
 
     this.store.pipe(select("products")).subscribe(products => {
-      if (products) {
-        this.displayCode = products.showProductCode;
-      }
+      this.displayCode = products.showProductCode;
     });
   }
 
