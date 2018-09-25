@@ -10,11 +10,13 @@ export interface ProductState {
   showProductCode: boolean;
   currentProduct: Product;
   products: Product[];
+  currentProductId: number;
 }
 
 const initialState: ProductState = {
   showProductCode: true,
   currentProduct: null,
+  currentProductId: -1,
   products: []
 };
 
@@ -25,9 +27,15 @@ export const getShowProductCode = createSelector(
   state => state.showProductCode
 );
 
+export const getCurrentProductId = createSelector(
+  getProductFeatureState,
+  state => state.currentProductId
+);
+
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
-  state => state.currentProduct
+  getCurrentProductId,
+  (state, id) => state.products.find(product => product.id === id)
 );
 
 export const getProducts = createSelector(
