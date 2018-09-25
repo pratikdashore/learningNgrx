@@ -35,6 +35,11 @@ export const getCurrentProductId = createSelector(
 
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
+  state => state.currentProduct
+);
+
+export const getCurrentProductWithId = createSelector(
+  getProductFeatureState,
   getCurrentProductId,
   (state, id) => state.products.find(product => product.id === id)
 );
