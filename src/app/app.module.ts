@@ -23,6 +23,7 @@ import { PageNotFoundComponent } from "./home/page-not-found.component";
 import { UserModule } from "./user/user.module";
 import { environment } from "../environments/environment";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { EffectsModule } from "@ngrx/effects";
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
     UserModule,
     AppRoutingModule,
     StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
       name: "Test Ngrx App",
       maxAge: 25,

@@ -71,6 +71,12 @@ export function productReducer(
         currentProduct: { ...action.payload }
       };
 
+    case ProductActionTypes.LoadProductsSuccess:
+      return {
+        ...state,
+        products: action.payload
+      };
+
     case ProductActionTypes.InitializeCurrentProduct:
       return {
         ...state,
