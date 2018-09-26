@@ -9,7 +9,6 @@ export interface State extends fromRoot.State {
 
 export interface ProductState {
   showProductCode: boolean;
-  currentProduct: Product;
   products: Product[];
   currentProductId: number;
   error: string;
@@ -17,8 +16,7 @@ export interface ProductState {
 
 const initialState: ProductState = {
   showProductCode: true,
-  currentProduct: null,
-  currentProductId: -1,
+  currentProductId: null,
   products: [],
   error: ""
 };
@@ -37,13 +35,20 @@ export const getCurrentProductId = createSelector(
 
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
-  state => state.currentProduct
-);
-
-export const getCurrentProductWithId = createSelector(
-  getProductFeatureState,
   getCurrentProductId,
-  (state, id) => state.products.find(product => product.id === id)
+  (state, id) => {
+    if (id === 0) {
+      return {
+        id: 0,
+        productName: "",
+        productCode: "New",
+        description: "",
+        starRating: 0
+      };
+    } else {
+      return id ? state.products.find(product => product.id === id) : null;
+    }
+  }
 );
 
 export const getProducts = createSelector(
@@ -69,13 +74,13 @@ export function productReducer(
     case ProductActionTypes.ClearCurrentProduct:
       return {
         ...state,
-        currentProduct: null
+        currentProductId: null
       };
 
     case ProductActionTypes.SetCurrentProduct:
       return {
         ...state,
-        currentProduct: { ...action.payload }
+        currentProductId: action.payload.id
       };
 
     case ProductActionTypes.LoadProductsSuccess:
@@ -95,13 +100,25 @@ export function productReducer(
     case ProductActionTypes.InitializeCurrentProduct:
       return {
         ...state,
-        currentProduct: {
-          id: -1,
-          productName: "",
-          productCode: "New",
-          description: "",
-          starRating: 0
-        }
+        currentProductId: 0
+      };
+
+    case ProductActionTypes.UpdateProductSuccess:
+      return {
+        ...state,
+        products: state.products.map(
+          product =>
+            product.id === action.payload.id ? action.payload : product
+        ),
+        currentProductId: action.payload.id,
+        error: ""
+      };
+
+    case ProductActionTypes.UpdateProductFail:
+      return {
+        ...state,
+        currentProductId: null,
+        error: action.payload
       };
     default:
       return state;
