@@ -114,11 +114,35 @@ export function productReducer(
         error: ""
       };
 
+    case ProductActionTypes.CreateProductFail:
     case ProductActionTypes.UpdateProductFail:
       return {
         ...state,
         currentProductId: null,
         error: action.payload
+      };
+
+    case ProductActionTypes.DeleteProductSuccess:
+      return {
+        ...state,
+        currentProductId: null,
+        error: "",
+        products: state.products.filter(
+          product => product.id !== action.payload
+        )
+      };
+
+    case ProductActionTypes.DeleteProductFail:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case ProductActionTypes.CreateProductSuccess:
+      return {
+        ...state,
+        currentProductId: null,
+        error: "",
+        products: [...state.products, action.payload]
       };
     default:
       return state;
