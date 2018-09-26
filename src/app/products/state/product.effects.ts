@@ -2,8 +2,9 @@ import { ProductService } from "./../product.service";
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import * as productActions from "./product.actions";
-import { mergeMap, map } from "rxjs/operators";
+import { mergeMap, map, catchError } from "rxjs/operators";
 import { Product } from "../product";
+import { of } from "rxjs";
 
 @Injectable()
 export class ProductEffects {
@@ -21,7 +22,9 @@ export class ProductEffects {
         map(
           (products: Product[]) =>
             new productActions.LoadProductsSuccess(products)
-        ) // map result and invoke another action
+        ),
+        catchError(error => of(new productActions.LoadProductsFail(error)))
+        // map result and invoke another action
       )
     )
   );
