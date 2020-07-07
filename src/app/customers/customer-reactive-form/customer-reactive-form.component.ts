@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { Customer } from '../models/customer';
 
 @Component({
@@ -24,6 +29,8 @@ export class CustomerReactiveFormComponent implements OnInit {
         { value: 'n/a', disabled: false },
         [Validators.required, Validators.email],
       ],
+      phone: '',
+      notification: 'email',
     });
   }
 
@@ -39,5 +46,15 @@ export class CustomerReactiveFormComponent implements OnInit {
       lastName: 'Dashore',
       email: 'test@gmail.com',
     });
+  }
+
+  onNotificationSet(type: string) {
+    const phoneCtrl = this.customerForm.get('phone');
+    if (type === 'text') {
+      phoneCtrl.setValidators([Validators.required]);
+    } else {
+      phoneCtrl.clearValidators();
+    }
+    phoneCtrl.updateValueAndValidity();
   }
 }
