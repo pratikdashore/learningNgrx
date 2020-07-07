@@ -12,8 +12,6 @@
             id="firstNameId"
             type="text"
             placeholder="First Name (required)"
-            required
-            minlength="3"
             formControlName="firstName"
             [ngClass]="{
               'is-invalid':
@@ -42,8 +40,6 @@
             id="lastNameId"
             type="text"
             placeholder="Last Name (required)"
-            required
-            maxlength="50"
             formControlName="lastName"
             [ngClass]="{
               'is-invalid':
@@ -70,8 +66,6 @@
             id="emailId"
             type="email"
             placeholder="Email (required)"
-            required
-            email
             formControlName="email"
             [ngClass]="{
               'is-invalid':
