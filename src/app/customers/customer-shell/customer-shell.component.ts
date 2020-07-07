@@ -11,7 +11,11 @@ export class CustomerShellComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onAddCustomer() {
-    this.router.navigate(['edit'], { relativeTo: this.route });
+  onAddCustomer(isReactive: boolean = false) {
+    let routeUrl = 'edit';
+    if (isReactive) {
+      routeUrl = 'reactiveEdit';
+    }
+    this.router.navigate([routeUrl], { relativeTo: this.route });
   }
 }
