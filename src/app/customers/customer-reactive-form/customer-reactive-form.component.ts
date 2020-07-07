@@ -16,12 +16,22 @@ export class CustomerReactiveFormComponent implements OnInit {
   ngOnInit(): void {
     this.customerForm = this.fb.group({
       firstName: '',
-      lastName: '',
-      email: '',
+      lastName: { value: '', disabled: false },
+      email: [{ value: 'n/a', disabled: true }],
     });
   }
 
   onSave() {
     console.log(JSON.stringify(this.customerForm.value));
+  }
+
+  populateTestData() {
+    // setValue to reset all form control values
+    // to set only certain form control values use patchValue
+    this.customerForm.patchValue({
+      firstName: 'Pratik',
+      lastName: 'Dashore',
+      email: 'test@gmail.com',
+    });
   }
 }
