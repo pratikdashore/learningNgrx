@@ -1,3 +1,4 @@
+import { NumberValidators } from './../../shared/number.validator';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -31,6 +32,7 @@ export class CustomerReactiveFormComponent implements OnInit {
       ],
       phone: '',
       notification: 'email',
+      rating: ['', [NumberValidators.range(1, 5)]],
     });
   }
 
