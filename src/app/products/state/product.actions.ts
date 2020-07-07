@@ -1,27 +1,27 @@
-import { Action } from "@ngrx/store";
-import { Product } from "../product";
+import { Action } from '@ngrx/store';
+import { Product } from '../product';
 
 export enum ProductActionTypes {
-  ToggleProductCode = "[Product] Toggle Product Code",
-  SetCurrentProduct = "[Product] Set Current Product",
-  ClearCurrentProduct = "[Product] Clear Current Product",
-  InitializeCurrentProduct = "[Product] Initialize Current Product",
+  ToggleProductCode = '[Product] Toggle Product Code',
+  SetCurrentProduct = '[Product] Set Current Product',
+  ClearCurrentProduct = '[Product] Clear Current Product',
+  InitializeCurrentProduct = '[Product] Initialize Current Product',
 
-  LoadProducts = "[Product] Load products",
-  LoadProductsSuccess = "[Product] Load Product Success",
-  LoadProductsFail = "[Product] Load Product Fail",
+  LoadProducts = '[Product] Load products',
+  LoadProductsSuccess = '[Product] Load Product Success',
+  LoadProductsFail = '[Product] Load Product Fail',
 
-  UpdateProduct = "[Product] Update Product",
-  UpdateProductSuccess = "[Product] Update Product Success",
-  UpdateProductFail = "[Product] Update Product Fail",
+  UpdateProduct = '[Product] Update Product',
+  UpdateProductSuccess = '[Product] Update Product Success',
+  UpdateProductFail = '[Product] Update Product Fail',
 
-  CreateProduct = "[Product] Create Product",
-  CreateProductSuccess = "[Product] Create Product Success",
-  CreateProductFail = "[Product] Create Product Fail",
+  CreateProduct = '[Product] Create Product',
+  CreateProductSuccess = '[Product] Create Product Success',
+  CreateProductFail = '[Product] Create Product Fail',
 
-  DeleteProduct = "[Product] Delete Product",
-  DeleteProductSuccess = "[Product] Delete Product Success",
-  DeleteProductFail = "[Product] Delete Product Fail"
+  DeleteProduct = '[Product] Delete Product',
+  DeleteProductSuccess = '[Product] Delete Product Success',
+  DeleteProductFail = '[Product] Delete Product Fail',
 }
 
 export class ToggleProductCode implements Action {

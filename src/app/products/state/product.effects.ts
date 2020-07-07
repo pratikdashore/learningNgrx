@@ -1,10 +1,10 @@
-import { ProductService } from "./../product.service";
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import * as productActions from "./product.actions";
-import { mergeMap, map, catchError } from "rxjs/operators";
-import { Product } from "../product";
-import { of, merge } from "rxjs";
+import { ProductService } from './../product.service';
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import * as productActions from './product.actions';
+import { mergeMap, map, catchError } from 'rxjs/operators';
+import { Product } from '../product';
+import { of, merge } from 'rxjs';
 
 @Injectable()
 export class ProductEffects {
@@ -23,7 +23,7 @@ export class ProductEffects {
           (products: Product[]) =>
             new productActions.LoadProductsSuccess(products)
         ),
-        catchError(error => of(new productActions.LoadProductsFail(error)))
+        catchError((error) => of(new productActions.LoadProductsFail(error)))
         // map result and invoke another action
       )
     )
@@ -36,10 +36,10 @@ export class ProductEffects {
     mergeMap((product: Product) =>
       this.productService.updateProduct(product).pipe(
         map(
-          updatedProduct =>
+          (updatedProduct) =>
             new productActions.UpdateProductSuccess(updatedProduct)
         ),
-        catchError(err => of(new productActions.UpdateProductFail(err)))
+        catchError((err) => of(new productActions.UpdateProductFail(err)))
       )
     )
   );
@@ -50,8 +50,10 @@ export class ProductEffects {
     map((action: productActions.CreateProduct) => action.payload),
     mergeMap((product: Product) =>
       this.productService.createProduct(product).pipe(
-        map(newProduct => new productActions.CreateProductSuccess(newProduct)),
-        catchError(err => of(new productActions.CreateProductFail(err)))
+        map(
+          (newProduct) => new productActions.CreateProductSuccess(newProduct)
+        ),
+        catchError((err) => of(new productActions.CreateProductFail(err)))
       )
     )
   );
@@ -63,7 +65,7 @@ export class ProductEffects {
     mergeMap((productId: number) =>
       this.productService.deleteProduct(productId).pipe(
         map(() => new productActions.DeleteProductSuccess(productId)),
-        catchError(err => of(new productActions.DeleteProductFail(err)))
+        catchError((err) => of(new productActions.DeleteProductFail(err)))
       )
     )
   );
