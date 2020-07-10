@@ -1,3 +1,4 @@
+import { MatchValidators } from './../../shared/match.validator';
 import { NumberValidators } from './../../shared/number.validator';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -26,10 +27,16 @@ export class CustomerReactiveFormComponent implements OnInit {
         { value: '', disabled: false },
         [Validators.required, Validators.maxLength(50)],
       ],
-      email: [
-        { value: 'n/a', disabled: false },
-        [Validators.required, Validators.email],
-      ],
+      emailGroup: this.fb.group(
+        {
+          email: [
+            { value: '', disabled: false },
+            [Validators.required, Validators.email],
+          ],
+          confirmEmail: ['', [Validators.required, Validators.email]],
+        },
+        { validator: MatchValidators.stringEqual('email', 'confirmEmail') }
+      ),
       phone: '',
       notification: 'email',
       rating: ['', [NumberValidators.range(1, 5)]],
