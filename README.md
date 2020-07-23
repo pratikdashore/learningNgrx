@@ -1,5 +1,7 @@
 # APM-Demo0
 
+# For Smart debugging, click on inspact element and once element is selected go to console and use apis available under ng object. example ng.getOwningComponent(\$0);
+
 Starter files with no NgRx added.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.2.
