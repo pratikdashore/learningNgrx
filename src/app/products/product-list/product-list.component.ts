@@ -36,7 +36,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       )
       .subscribe((selectedProduct) => (this.selectedProduct = selectedProduct));
 
-    this.store.dispatch(new productActions.LoadProducts());
+    this.store.dispatch(productActions.loadProducts());
 
     this.store
       .pipe(
@@ -60,14 +60,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   checkChanged(value: boolean): void {
-    this.store.dispatch(new productActions.ToggleProductCode(value));
+    this.store.dispatch(productActions.toggleProductCode({ showCode: value }));
   }
 
   newProduct(): void {
-    this.store.dispatch(new productActions.InitializeCurrentProduct());
+    this.store.dispatch(productActions.initializeCurrentProduct());
   }
 
   productSelected(product: Product): void {
-    this.store.dispatch(new productActions.SetCurrentProduct(product));
+    this.store.dispatch(productActions.setCurrentProduct({ product }));
   }
 }
