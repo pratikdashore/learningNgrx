@@ -1,34 +1,40 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { Product } from '../product';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
-import { Store, select } from '@ngrx/store';
-import * as productActions from './../state/product.actions';
-import * as fromProduct from './../state/product.reducer';
+import { Product } from '../product';
 
 @Component({
   selector: 'pm-product-edit',
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductEditComponent implements OnInit, OnDestroy {
+export class ProductEditComponent implements OnInit, OnChanges {
   pageTitle = 'Product Edit';
   errorMessage = '';
   productForm: FormGroup;
 
-  product: Product | null;
+  @Input() selectedProduct: Product | null;
+
+  @Output() deleteProduct = new EventEmitter<Product>();
+  @Output() saveProduct = new EventEmitter<Product>();
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
-  constructor(
-    private store: Store<fromProduct.State>,
-    private fb: FormBuilder
-  ) {
+  constructor(private fb: FormBuilder) {
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
     this.validationMessages = {
@@ -49,6 +55,12 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     // passing in this form's set of validation messages.
     this.genericValidator = new GenericValidator(this.validationMessages);
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('Called On Changes');
+
+    this.selectedProduct = changes['selectedProduct'].currentValue;
+    this.displayProduct();
+  }
 
   ngOnInit(): void {
     // Define the form group
@@ -66,10 +78,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       description: '',
     });
 
-    // Watch for changes to the currently selected product
-    this.store
-      .pipe(select(fromProduct.getCurrentProduct))
-      .subscribe((selectedProduct) => this.displayProduct(selectedProduct));
+    this.displayProduct();
 
     // Watch for value changes
     this.productForm.valueChanges.subscribe(
@@ -80,8 +89,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
-
   // Also validate on blur
   // Helpful if the user tabs through required fields
   blur(): void {
@@ -90,27 +97,25 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  displayProduct(product: Product | null): void {
+  displayProduct(): void {
     // Set the local product property
-    this.product = product;
-
-    if (this.product) {
+    if (this.selectedProduct) {
       // Reset the form back to pristine
       this.productForm.reset();
 
       // Display the appropriate page title
-      if (this.product.id === 0) {
+      if (this.selectedProduct.id === 0) {
         this.pageTitle = 'Add Product';
       } else {
-        this.pageTitle = `Edit Product: ${this.product.productName}`;
+        this.pageTitle = `Edit Product: ${this.selectedProduct.productName}`;
       }
 
       // Update the data on the form
       this.productForm.patchValue({
-        productName: this.product.productName,
-        productCode: this.product.productCode,
-        starRating: this.product.starRating,
-        description: this.product.description,
+        productName: this.selectedProduct.productName,
+        productCode: this.selectedProduct.productCode,
+        starRating: this.selectedProduct.starRating,
+        description: this.selectedProduct.description,
       });
     }
   }
@@ -118,35 +123,24 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   cancelEdit(): void {
     // Redisplay the currently selected product
     // replacing any edits made
-    this.displayProduct(this.product);
+    this.displayProduct();
   }
 
-  deleteProduct(): void {
-    if (this.product && this.product.id) {
-      if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.store.dispatch(
-          productActions.deleteProduct({ productId: this.product.id })
-        );
-      }
-    } else {
-      // No need to delete, it was never saved
-      this.store.dispatch(productActions.clearCurrentProduct());
-    }
+  onDeleteProduct(): void {
+    this.deleteProduct.emit(this.selectedProduct);
   }
 
-  saveProduct(): void {
+  onSaveProduct(): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         // Copy over all of the original product properties
         // Then copy over the values from the form
         // This ensures values not on the form, such as the Id, are retained
-        const p = { ...this.product, ...this.productForm.value };
-
-        if (p.id === 0) {
-          this.store.dispatch(productActions.createProduct({ product: p }));
-        } else {
-          this.store.dispatch(productActions.updateProduct({ product: p }));
-        }
+        const newProduct = {
+          ...this.selectedProduct,
+          ...this.productForm.value,
+        };
+        this.saveProduct.emit(newProduct);
       }
     } else {
       this.errorMessage = 'Please correct the validation errors.';

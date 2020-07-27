@@ -1,73 +1,40 @@
-import * as productActions from './../state/product.actions';
-import * as fromProduct from './../state/product.reducer';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Product } from '../product';
-import { ProductService } from '../product.service';
-import { Store, select } from '@ngrx/store';
-import { takeWhile } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'pm-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductListComponent implements OnInit, OnDestroy {
+export class ProductListComponent {
   pageTitle = 'Products';
-  errorMessage: string;
-
-  componentActive = true;
-  displayCode: boolean;
-
-  products: Product[];
-
-  // Used to highlight the selected product in the list
   selectedProduct: Product | null;
-  errorMessage$: Observable<string>;
 
-  constructor(private store: Store<fromProduct.State>) {}
+  displayCode = true;
+  @Input() products: Product[];
+  @Input() errorMessage: string;
+  @Output() selectProduct = new EventEmitter<Product>();
+  @Output() addProduct = new EventEmitter<void>();
 
-  ngOnInit(): void {
-    this.store
-      .pipe(
-        select(fromProduct.getCurrentProduct),
-        takeWhile(() => this.componentActive)
-      )
-      .subscribe((selectedProduct) => (this.selectedProduct = selectedProduct));
-
-    this.store.dispatch(productActions.loadProducts());
-
-    this.store
-      .pipe(
-        select(fromProduct.getProducts),
-        takeWhile(() => this.componentActive)
-      )
-      .subscribe((products: Product[]) => (this.products = products));
-
-    this.store
-      .pipe(
-        select(fromProduct.getShowProductCode),
-        takeWhile(() => this.componentActive)
-      )
-      .subscribe((showProductCode) => (this.displayCode = showProductCode));
-
-    this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
-  }
-
-  ngOnDestroy(): void {
-    this.componentActive = false;
-  }
+  constructor() {}
 
   checkChanged(value: boolean): void {
-    this.store.dispatch(productActions.toggleProductCode({ showCode: value }));
+    this.displayCode = value;
   }
 
   newProduct(): void {
-    this.store.dispatch(productActions.initializeCurrentProduct());
+    this.addProduct.emit();
   }
 
   productSelected(product: Product): void {
-    this.store.dispatch(productActions.setCurrentProduct({ product }));
+    this.selectedProduct = product;
+    this.selectProduct.emit(product);
   }
 }
