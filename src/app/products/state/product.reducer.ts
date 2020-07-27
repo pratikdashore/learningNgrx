@@ -13,25 +13,18 @@ export interface State extends fromRoot.State {
 }
 
 export interface ProductState {
-  showProductCode: boolean;
   products: Product[];
   currentProductId: number;
   error: string;
 }
 
 const initialState: ProductState = {
-  showProductCode: true,
   currentProductId: null,
   products: [],
   error: '',
 };
 
 const getProductFeatureState = createFeatureSelector<ProductState>('products');
-
-export const getShowProductCode = createSelector(
-  getProductFeatureState,
-  (state) => state.showProductCode
-);
 
 export const getCurrentProductId = createSelector(
   getProductFeatureState,
@@ -68,10 +61,6 @@ export const getError = createSelector(
 
 const productReducer = createReducer(
   initialState,
-  on(ProductActions.toggleProductCode, (state, action) => ({
-    ...state,
-    showProductCode: action.showCode,
-  })),
 
   on(ProductActions.clearCurrentProduct, (state, action) => ({
     ...state,

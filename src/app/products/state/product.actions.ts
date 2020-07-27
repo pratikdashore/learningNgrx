@@ -1,11 +1,6 @@
 import { Action, createAction, props } from '@ngrx/store';
 import { Product } from '../product';
 
-export const toggleProductCode = createAction(
-  '[Product] Toggle Product Code',
-  props<{ showCode: boolean }>()
-);
-
 export const setCurrentProduct = createAction(
   '[Product] Set Current Product',
   props<{ product: Product }>()
