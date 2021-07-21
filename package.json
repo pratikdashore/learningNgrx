@@ -11,6 +11,7 @@
     "e2e": "ng e2e"
   },
   "private": true,
+  "resolutions": {"webpack":"^5.0.0"},
   "dependencies": {
     "@angular/animations": "^11.2.14",
     "@angular/common": "^11.2.14",
